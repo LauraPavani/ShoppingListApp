@@ -1,6 +1,7 @@
 package com.example.myshoppinglist
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,9 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -35,7 +38,7 @@ import androidx.compose.ui.unit.dp
 data class ShoppingItem(val id: Int,
                         var name: String,
                         var quantity: Int,
-                        var idEditing: Boolean = false)
+                        var isdEditing: Boolean = false)
 
 @Composable
 fun ShoppingListApp(){
@@ -62,9 +65,29 @@ fun ShoppingListApp(){
                 .fillMaxSize()
                 .padding(16.dp)
         ){
+            //to modify any item that you don't know where it is
             items(sItems){
-                ShoppingListItem(it,{},{})
-
+                item ->
+                if(item.isdEditing){
+                    ShoppingItemEditor(item = item, onEditComplete = {
+                        editedName, editedQuantity ->
+                        sItems = sItems.map{ it.copy(isdEditing = false)}
+                        val editedItem = sItems.find{ it.id == item.id}
+                        editedItem?.let{
+                            it.name = editedName
+                            it.quantity = editedQuantity
+                        }
+                    })
+                }else{
+                    ShoppingListItem(item = item, onEditClick = {
+                        //finding out which item we are editing and changing is "isEditing boolean"to true
+                       sItems = sItems.map { it.copy(isdEditing = it.id == item.id)}
+                    },
+                            onDeleteClick = {
+                        sItems = sItems - item
+                    })
+                }
+                
             }
 
         }
@@ -121,6 +144,52 @@ fun ShoppingListApp(){
         })
     }
 }
+
+@Composable
+fun ShoppingItemEditor(
+    item: ShoppingItem,
+    onEditComplete: (String, Int) -> Unit,
+){
+    var editedName by remember { mutableStateOf(item.name)}
+    var editedQuantity by remember { mutableStateOf(item.quantity.toString())}
+    var isEditing by remember { mutableStateOf(item.isdEditing)}
+
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .background(Color.Gray)
+        .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ){
+        Column {
+            BasicTextField(
+                value = editedName,
+                onValueChange = {editedName = it},
+                singleLine = true,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(8.dp)
+            )
+            BasicTextField(
+                value = editedQuantity,
+                onValueChange = {editedQuantity = it},
+                singleLine = true,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(8.dp)
+            )
+        }
+        Button(
+            onClick = { isEditing = false
+            onEditComplete(editedName, editedQuantity.toIntOrNull() ?: 1)
+            }
+        ) {
+            Text("Save")
+        }
+        
+    }
+
+}
+
 
 @Composable
 fun ShoppingListItem(
