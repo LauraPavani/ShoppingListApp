@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -87,9 +86,7 @@ fun ShoppingListApp(){
                         sItems = sItems - item
                     })
                 }
-                
             }
-
         }
     }
     if (showDialog){
@@ -185,9 +182,7 @@ fun ShoppingItemEditor(
         ) {
             Text("Save")
         }
-        
     }
-
 }
 
 
@@ -203,7 +198,8 @@ fun ShoppingListItem(
         .border(
             border = BorderStroke(2.dp, Color(0xFF018786)),
             shape = RoundedCornerShape(20),
-        )
+        ),
+        horizontalArrangement = Arrangement.SpaceBetween
     ){
         Text(text = item.name, modifier = Modifier.padding(8.dp))
         Text(text = "Qty: ${item.quantity}", modifier = Modifier.padding(8.dp))
