@@ -39,13 +39,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.navigation.NavController
 
 
 data class ShoppingItem(val id: Int,
                         var name: String,
                         var quantity: Int,
-                        var isdEditing: Boolean = false)
-                        var address: String = ""
+                        var isdEditing: Boolean = false,
+                        var address: String = "")
 
 @Composable
 fun ShoppingListApp(
@@ -244,7 +245,6 @@ fun ShoppingItemEditor(
     }
 }
 
-
 @Composable
 fun ShoppingListItem(
     item: ShoppingItem,
@@ -268,7 +268,7 @@ fun ShoppingListItem(
                 Text(text = "Qty: ${item.quantity}", modifier = Modifier.padding(8.dp))
             }
             Row (modifier = Modifier.fillMaxWidth()){
-                Icon(imageVector = Icons.Default.LocationOn, ContentDescription = null)
+                Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
                 Text(text = item.address)
             }
         }
