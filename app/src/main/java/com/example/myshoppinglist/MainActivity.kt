@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         .padding(WindowInsets.safeDrawing.asPaddingValues()),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   ShoppingListApp()
+                  // ShoppingListApp()
                 }
             }
         }
